@@ -25,7 +25,8 @@ Return ONLY a valid JSON object in this exact format:
         "Clear, informative point that adds value",
         "Actionable or thought-provoking insight"
       ],
-      "notes": "Speaker note explaining this slide's key message in 1-2 sentences."
+      "notes": "Speaker note explaining this slide in 1-2 sentences.",
+      "image_query": "a short descriptive phrase for an image that matches this slide"
     }}
   ]
 }}
@@ -33,10 +34,9 @@ Return ONLY a valid JSON object in this exact format:
 Requirements:
 - Generate exactly 8 slides
 - Start with an overview slide, end with a conclusion/future outlook slide
-- Each bullet must be specific, informative and data-driven where possible (not vague)
-- Avoid generic filler like "this is important" — every bullet must teach something
-- Titles must be engaging and descriptive
-- Notes must give the speaker context beyond what's on the slide
+- Each bullet must be specific and informative
+- Titles must be engaging and descriptive (max 60 chars)
+- image_query must be a short 3-6 word phrase suitable for image search (e.g. "solar panels on rooftop")
 - Return ONLY the JSON object, no extra text, no markdown, no code fences"""
 
     max_retries = 3

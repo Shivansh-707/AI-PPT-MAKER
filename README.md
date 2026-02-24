@@ -1,199 +1,156 @@
-# 🤖 AI-Powered PPT Maker
+# 📊 AI-Powered PPT Maker
 
-An end-to-end AI system that takes a topic as input, autonomously researches it using an LLM, and generates a complete, well-structured Google Slides presentation — all without manual content writing or slide design.
-
----
-
-## 🎯 Project Overview
-
-This tool automates the entire presentation creation pipeline:
-
-**User Input (Topic)** → **AI Research Agent** → **Structured Content (JSON)** → **Google Slides Generator** → **Shareable Presentation Link**
+An end-to-end AI tool that takes a topic as input, autonomously researches it using Google Gemini, and generates a complete, well-structured Google Slides presentation — fully automated, no manual writing or design required.
 
 ---
 
-## 🏗️ Architecture
+## 🚀 Sample Presentations
 
-### Two-Phase Pipeline
-
-#### Phase 1: AI Research Agent (research_agent.py)
-- Uses Groq LLaMA 3.1 8B Instant to research the given topic
-- Generates structured JSON with slide titles, bullet points, and speaker notes
-- Validates output using Pydantic models
-- Handles malformed JSON with automatic cleanup and retry logic
-
-#### Phase 2: Google Slides Generator (slides_generator.py)
-- Authenticates with Google Slides API and Drive API via OAuth 2.0
-- Creates a blank presentation using presentations.create()
-- Uses batchUpdate() to add slides, insert text, and apply formatting
-- Inserts speaker notes into each slide's notes pane
-- Shares the presentation publicly and returns the shareable link
-
-#### User Interface (app.py)
-- Streamlit web app for easy interaction
-- Displays real-time progress with separate spinners for research and generation phases
-- Logs and displays time taken for each phase
-- Shows slide title preview before generation
-- Includes showcase section with 3 sample presentations
+- 🔗 [Artificial Intelligence](https://docs.google.com/presentation/d/1xyuyFPyGRLGeHjKMBxVCGg-oebCIjdjyqhgaf6kHa8M/edit)
+- 🔗 [Tigers and Their Breeds](https://docs.google.com/presentation/d/1NAG9e-MIddYbDHAZqUwpipotgtgeZiUwsvGD7L-uWfk/edit)
+- 🔗 [Mobile Phones](https://docs.google.com/presentation/d/15C2QzbSTK1JD6sGBsWT1-B_KSIhJyFSXErszC6EeH3Q/edit)
 
 ---
 
-## 📂 Project Structure
+## 🧠 How It Works
+
+The system follows a **two-phase AI pipeline**:
+
+### Phase 1 — AI Research Agent
+- Takes a topic as input
+- Uses **Google Gemini** to research the topic and generate structured slide content
+- Outputs a validated JSON outline: titles, bullet points, speaker notes, and image queries per slide
+
+### Phase 2 — Google Slides Generator
+- Authenticates with **Google Slides API** via a Service Account
+- Creates a blank presentation and maps AI content onto slides
+- Fetches **per-slide images** from **Pexels API** based on each slide's topic
+- Applies theme-based formatting (colors, fonts, layout)
+- Shares the deck publicly and returns a shareable link
+
+---
+
+## ✨ Features
+
+- 🤖 **AI Research** — Gemini researches any topic and structures it into slides
+- 🎨 **4 Themes** — Default, Minimal, Dark, Corporate
+- 🖼️ **Auto Images** — Per-slide images auto-fetched from Pexels (toggleable)
+- 🖼️ **Hero Image** — Optional custom image URL for the title slide
+- 📝 **Speaker Notes** — Auto-generated notes on every slide
+- ⏱️ **Time Logging** — Displays research time + generation time separately
+- 🔗 **Shareable Link** — Returns a public Google Slides link instantly
+- 🧹 **No Overlap** — Text and images are precisely split left/right per slide
+
+---
+
+## 🗂️ Project Structure
 
 ```
-ai-ppt-maker/
+ppt-maker-ai/
+│
 ├── app.py                  # Streamlit UI
-├── research_agent.py       # LLM research pipeline
-├── slides_generator.py     # Google Slides API logic
-├── google_auth.py          # OAuth authentication
-├── models.py               # Pydantic data models
-├── .env                    # API keys (not in repo)
-├── credentials.json        # Google OAuth credentials (not in repo)
-├── token.json              # Google auth token (not in repo)
-├── .gitignore              # Excludes sensitive files
+├── research_agent.py       # Phase 1 — Gemini AI research + outline generation
+├── slides_generator.py     # Phase 2 — Google Slides API slide creation
+├── image_search.py         # Pexels API image fetcher
+├── models.py               # Pydantic models (PresentationOutline, SlideContent)
+├── google_auth.py          # Google Slides + Drive API authentication
 ├── requirements.txt        # Python dependencies
-└── README.md               # This file
+├── .env                    # API keys (not committed)
+├── credentials.json        # Google Service Account credentials (not committed)
+└── README.md
 ```
 
 ---
 
-## 🚀 Setup Instructions
+## ⚙️ Setup Instructions
 
-### 1. Clone the Repository
-
+### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/ai-ppt-maker.git
-cd ai-ppt-maker
+git clone https://github.com/Shivansh-707/AI-PPT-MAKER.git
+cd AI-PPT-MAKER
 ```
 
-### 2. Install Dependencies
-
+### 2. Install dependencies
 ```bash
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-### 3. Set Up Google Cloud
+### 3. Set up Google Cloud
+- Go to [Google Cloud Console](https://console.cloud.google.com/)
+- Enable **Google Slides API** and **Google Drive API**
+- Create a **Service Account** and download `credentials.json`
+- Place `credentials.json` in the project root
 
-1. Go to https://console.cloud.google.com/
-2. Create a new project or select an existing one
-3. Enable Google Slides API and Google Drive API
-4. Create OAuth 2.0 Client ID credentials:
-   - Go to APIs & Services → Credentials
-   - Configure OAuth consent screen (External, add your email as test user)
-   - Create credentials → OAuth 2.0 Client ID → Desktop app
-   - Download the JSON file and save it as credentials.json in the project root
-
-### 4. Get Groq API Key
-
-1. Sign up at https://console.groq.com/
-2. Create an API key
-3. Create a .env file in the project root:
-
-```
-GROQ_API_KEY=your_groq_api_key_here
+### 4. Set up environment variables
+Create a `.env` file in the root:
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+PEXELS_API_KEY=your_pexels_api_key_here
 ```
 
-### 5. Run the Application
+- Get Gemini API key → [Google AI Studio](https://aistudio.google.com/)
+- Get Pexels API key → [Pexels API](https://www.pexels.com/api/)
 
+### 5. Run the app
 ```bash
-python3 -m streamlit run app.py
+streamlit run app.py
 ```
 
-On first run, a browser window will open asking you to authenticate with Google.
+---
+
+## 🤖 LLM Used — Google Gemini
+
+**Why Gemini?**
+- Free tier is generous — no billing required for this project
+- Native JSON mode makes structured slide output reliable
+- Fast response times suitable for real-time generation
+
+**Prompt Design:**
+The research prompt instructs Gemini to return a strict JSON structure with `topic`, and a `slides` array — each slide containing `title`, `bullets` (3–5 points), `notes`, and `image_query`. Pydantic validation ensures no malformed output reaches the Slides API.
 
 ---
 
-## 🧠 LLM Choice and Reasoning
+## 🧪 Testing
 
-### Why Groq LLaMA 3.1 8B Instant?
-
-1. Speed: Groq's LPU inference is extremely fast (~300 tokens/sec), critical for a real-time UI
-2. Cost: Free tier with generous daily limits — sufficient for this use case
-3. Quality: LLaMA 3.1 8B provides strong reasoning and structured output generation
-4. Rate Limit Compatibility: Smaller model consumes fewer tokens per request, avoiding rate limit issues
-
----
-
-## 📝 Prompt Design
-
-### Strategy
-
-The prompt is designed to:
-1. Be explicit about output format — includes a JSON schema example
-2. Set quality expectations — specific, data-driven, informative bullets
-3. Enforce structure — exactly 8 slides, 3 bullets per slide, speaker notes
-4. Prevent hallucination — no markdown, no code fences, only JSON
-
-### Validation
-
-After LLM response:
-- Strip markdown code blocks if present
-- Parse JSON and validate with Pydantic
-- Retry with 30-second backoff on rate limit errors
-- Fail gracefully with clear error messages
+Tested with 3+ topics of varying complexity:
+- ✅ AI-generated content is accurate and well-structured
+- ✅ Slide formatting is consistent across all themes
+- ✅ Images placed without overlapping text
+- ✅ Speaker notes generated on every slide
+- ✅ Shareable Google Slides link returned every time
 
 ---
 
-## ⏱️ Performance Benchmarks
+## 📦 Requirements
 
-| Phase | Avg Time |
-|-------|----------|
-| AI Research | 3-5 seconds |
-| Slide Generation | 4-6 seconds |
-| Total | 7-11 seconds |
+```
+streamlit
+google-api-python-client
+google-auth
+google-generativeai
+pydantic
+requests
+python-dotenv
+```
 
----
-
-## 📊 Sample Presentations
-
-1. iPhone 14: https://docs.google.com/presentation/d/1SzMPuvTtVGt0Dn7ASVIniBsNRgi4fVgzcXx_IoTAQWk/edit
-2. Tiger Breeds and Differences: https://docs.google.com/presentation/d/1_sI-HtEzBEZDVpeRFiiGWuJRDaD12vsUNi-A9hfzLBw/edit
-3. Machine Learning vs Deep Learning: https://docs.google.com/presentation/d/16k2I4BDgu5fG0FfshFbDWZko0SfXatkAcEhMXFzmhzo/edit
-
----
-
-## 🛠️ Error Handling
-
-- Rate limit handling: Automatic retry with exponential backoff
-- Malformed JSON: Strips markdown code blocks, validates with Pydantic
-- Google API failures: Try-except blocks with user-friendly error messages in Streamlit
+Install all with:
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
-## 🔒 Security
+## 🔒 Environment Variables
 
-.gitignore prevents committing sensitive files:
-- credentials.json (Google OAuth)
-- token.json (Google auth token)
-- .env (API keys)
+| Variable | Description |
+|---|---|
+| `GEMINI_API_KEY` | Google Gemini API key |
+| `PEXELS_API_KEY` | Pexels image search API key |
 
----
-
-## 🎨 Features
-
-- AI-powered research using Groq LLaMA 3.1
-- Structured JSON output with validation
-- Google Slides creation with formatting
-- Speaker notes insertion
-- Public sharing with one-click links
-- Real-time progress tracking
-- Phase-wise time logging
-- Streamlit web interface
-- Sample presentation showcase
+Never commit `.env` or `credentials.json` to GitHub.
 
 ---
 
-## 📈 Future Enhancements
+## 📄 License
 
-- Web search integration (Tavily/SerpAPI) for live data
-- Export as .pptx file
-- Custom theme selection
-- Image generation and insertion
-- Multi-language support
-
----
-
-## 👤 Author
-
-Shivansh Jha
-CSE Final Year Student | Kaggle Enthusiast
+MIT License — free to use and modify.
