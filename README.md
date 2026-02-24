@@ -189,6 +189,8 @@ The research prompt instructs the model to return a strict JSON structure:
 | Minimal | Off-white | Clean, simple decks |
 | Dark | Near-black | Tech, modern topics |
 | Corporate | Light blue-grey | Business presentations |
+| Vibrant | Light Pinkish | Fun-asthetic presentations  |
+| Ocean | Oceanic blue color | minimalist color design |
 
 
 ---
