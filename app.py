@@ -200,10 +200,11 @@ with st.sidebar:
     st.markdown("### 📂 Sample Presentations")
 
     samples = [
-        ("🤖 Artificial Intelligence", "https://docs.google.com/presentation/d/1xyuyFPyGRLGeHjKMBxVCGg-oebCIjdjyqhgaf6kHa8M/edit"),
-        ("🐯 Tigers & Their Breeds",   "https://docs.google.com/presentation/d/1NAG9e-MIddYbDHAZqUwpipotgtgeZiUwsvGD7L-uWfk/edit"),
-        ("📱 Mobile Phones",            "https://docs.google.com/presentation/d/15C2QzbSTK1JD6sGBsWT1-B_KSIhJyFSXErszC6EeH3Q/edit"),
+    ("💹 Finance and Trading",  "https://docs.google.com/presentation/d/1fFEAcrLw1er6roRHJp8_efrHwij42nekzlpzzhebYcw/edit"),
+    ("🎲 Probability and Luck", "https://docs.google.com/presentation/d/12vE_Ljbli4W9PZBmCNEs9OfxuX_akbUpkZhiT2CfYAY/edit"),
+    ("🤖 AI and Robotics",      "https://docs.google.com/presentation/d/1CqzqQX1IcbGzTQRPj4RdTRmBiJRAY3C8kqOH47C6QwA/edit"),
     ]
+
     for label, link in samples:
         st.markdown(f"[{label}]({link})")
 

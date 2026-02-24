@@ -1,79 +1,103 @@
 import os
 import json
-import time
 from groq import Groq
 from dotenv import load_dotenv
-from models import Slide, PresentationOutline
+from models import SlideContent, PresentationOutline
 
+# Load .env file
 load_dotenv()
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+# Initialize Groq client
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 def build_outline(topic: str) -> PresentationOutline:
-    prompt = f"""You are a world-class researcher and presentation designer.
+    prompt = f"""
+Research the topic '{topic}' deeply and return a comprehensive, detailed JSON object with this exact structure:
 
-Create a detailed, professional presentation on the topic: '{topic}'
-
-Return ONLY a valid JSON object in this exact format:
 {{
-  "topic": "{topic}",
+  "topic": "Main Topic Title",
   "slides": [
     {{
-      "title": "Slide title (max 60 chars)",
+      "title": "Introduction",
       "bullets": [
-        "Specific fact or insight with real data/statistics if possible",
-        "Clear, informative point that adds value",
-        "Actionable or thought-provoking insight"
+        "Detailed bullet point with 15-25 words explaining the concept thoroughly",
+        "Another comprehensive point with specific examples and context",
+        "Third point with statistics, facts, or real-world applications"
       ],
-      "notes": "Speaker note explaining this slide in 1-2 sentences.",
-      "image_query": "a short descriptive phrase for an image that matches this slide"
+      "notes": "Detailed speaker notes with 2-3 sentences providing background and extra context for the presenter",
+      "image_query": "relevant search term for image",
+      "table": null
+    }},
+    {{
+      "title": "Comparison / Pros & Cons / Key Metrics",
+      "bullets": [],
+      "notes": "Explain the table content and key takeaways in 2-3 sentences",
+      "image_query": "",
+      "table": {{
+        "headers": ["Column 1", "Column 2", "Column 3"],
+        "rows": [
+          ["Detailed point 1 in col 1", "Detailed point 1 in col 2", "Detail 1 in col 3"],
+          ["Detailed point 2 in col 1", "Detailed point 2 in col 2", "Detail 2 in col 3"],
+          ["Detailed point 3 in col 1", "Detailed point 3 in col 2", "Detail 3 in col 3"]
+        ]
+      }}
     }}
   ]
 }}
 
-Requirements:
-- Generate exactly 8 slides
-- Start with an overview slide, end with a conclusion/future outlook slide
-- Each bullet must be specific and informative
-- Titles must be engaging and descriptive (max 60 chars)
-- image_query must be a short 3-6 word phrase suitable for image search (e.g. "solar panels on rooftop")
-- Return ONLY the JSON object, no extra text, no markdown, no code fences"""
+**STRICT RULES:**
+- Generate 7-9 slides total (including 1-2 table slides)
+- Each bullet must be 15-25 words long — comprehensive and detailed
+- Include specific examples, statistics, facts, or real-world applications
+- Speaker notes must be 2-3 full sentences with extra context
+- Add a table on 1-2 slides where comparison/analysis makes sense
+- Table slides should have empty bullets array and no image_query
+- Non-table slides must have 4-5 detailed bullets
+- Return ONLY valid JSON, no markdown, no explanations
+"""
 
-    max_retries = 3
-    for attempt in range(max_retries):
-        try:
-            response = client.chat.completions.create(
-                model="llama-3.1-8b-instant",
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.7,
-                max_tokens=1500,
-            )
+    chat_completion = client.chat.completions.create(
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a research assistant that generates comprehensive, detailed slide content. Always return pure JSON.",
+            },
+            {"role": "user", "content": prompt},
+        ],
+        model="llama-3.3-70b-versatile",
+        temperature=0.7,
+        max_tokens=8000,
+    )
 
-            raw = response.choices[0].message.content.strip()
+    raw_response = chat_completion.choices[0].message.content.strip()
 
-            if "```" in raw:
-                raw = raw.split("```")[1]
-                if raw.startswith("json"):
-                    raw = raw[4:]
-            raw = raw.strip()
+    # Clean response
+    if raw_response.startswith("```json"):
+        raw_response = raw_response[7:]
+    if raw_response.startswith("```"):
+        raw_response = raw_response[3:]
+    if raw_response.endswith("```"):
+        raw_response = raw_response[:-3]
+    raw_response = raw_response.strip()
 
-            data = json.loads(raw)
-            outline = PresentationOutline(**data)
-            return outline
-
-        except Exception as e:
-            if "rate_limit" in str(e).lower() and attempt < max_retries - 1:
-                print(f"Rate limit hit, waiting 30 seconds... (attempt {attempt+1})")
-                time.sleep(30)
-            else:
-                raise e
+    try:
+        data = json.loads(raw_response)
+        outline = PresentationOutline(**data)
+        print(f"✅ Generated {len(outline.slides)} slides for '{outline.topic}'")
+        return outline
+    except Exception as e:
+        print(f"❌ Parse error: {e}")
+        print(f"Raw response: {raw_response[:500]}")
+        raise
 
 
 if __name__ == "__main__":
-    outline = build_outline("Climate Change")
-    print(f"Topic: {outline.topic}")
-    print(f"Number of slides: {len(outline.slides)}")
-    for i, slide in enumerate(outline.slides, 1):
+    outline = build_outline("Artificial Intelligence")
+    print(f"\nTopic: {outline.topic}")
+    for i, slide in enumerate(outline.slides, start=1):
         print(f"\nSlide {i}: {slide.title}")
-        for bullet in slide.bullets:
-            print(f"  • {bullet}")
+        if slide.table:
+            print(f"  [TABLE with {len(slide.table.rows)} rows]")
+        else:
+            for bullet in slide.bullets:
+                print(f"  • {bullet}")
