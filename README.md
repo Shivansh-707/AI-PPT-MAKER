@@ -39,7 +39,7 @@ The system follows a **two-phase AI pipeline**:
 ## ✨ Features
 
 - ⚡ **Groq AI Research** — LLaMA 3.3 70B researches any topic and structures it into detailed slides
-- 🎨 **4 Themes** — Default, Minimal, Dark, Corporate
+- 🎨 **6 Themes** — Default, Minimal, Dark, Corporate, Vibrant, Ocean
 - 🖼️ **Auto Images** — Per-slide images auto-fetched from Pexels (toggleable)
 - 🖼️ **Hero Image** — Optional custom image URL for the title slide
 - 📊 **Auto Tables** — Pros/cons and comparison tables auto-generated on relevant slides
