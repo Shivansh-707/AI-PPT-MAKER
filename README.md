@@ -1,6 +1,6 @@
 # 📊 AI-Powered PPT Maker
 
-An end-to-end AI tool that takes a topic as input, autonomously researches it using Google Gemini, and generates a complete, well-structured Google Slides presentation — fully automated, no manual writing or design required.
+An end-to-end AI tool that takes a topic as input, autonomously researches it using Groq API, and generates a complete, well-structured Google Slides presentation — fully automated, no manual writing or design required.
 
 ---
 
@@ -18,7 +18,7 @@ The system follows a **two-phase AI pipeline**:
 
 ### Phase 1 — AI Research Agent
 - Takes a topic as input
-- Uses **Google Gemini** to research the topic and generate structured slide content
+- Uses **Groq API** to research the topic and generate structured slide content
 - Outputs a validated JSON outline: titles, bullet points, speaker notes, and image queries per slide
 
 ### Phase 2 — Google Slides Generator
@@ -32,7 +32,7 @@ The system follows a **two-phase AI pipeline**:
 
 ## ✨ Features
 
-- 🤖 **AI Research** — Gemini researches any topic and structures it into slides
+- 🤖 **AI Research** — Groq API researches any topic and structures it into slides
 - 🎨 **4 Themes** — Default, Minimal, Dark, Corporate
 - 🖼️ **Auto Images** — Per-slide images auto-fetched from Pexels (toggleable)
 - 🖼️ **Hero Image** — Optional custom image URL for the title slide
@@ -49,7 +49,7 @@ The system follows a **two-phase AI pipeline**:
 ppt-maker-ai/
 │
 ├── app.py                  # Streamlit UI
-├── research_agent.py       # Phase 1 — Gemini AI research + outline generation
+├── research_agent.py       # Phase 1 — Groq AI research + outline generation
 ├── slides_generator.py     # Phase 2 — Google Slides API slide creation
 ├── image_search.py         # Pexels API image fetcher
 ├── models.py               # Pydantic models (PresentationOutline, SlideContent)
@@ -84,11 +84,11 @@ pip install -r requirements.txt
 ### 4. Set up environment variables
 Create a `.env` file in the root:
 ```env
-GEMINI_API_KEY=your_gemini_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
 PEXELS_API_KEY=your_pexels_api_key_here
 ```
 
-- Get Gemini API key → [Google AI Studio](https://aistudio.google.com/)
+- Get Groq API key → [Groq Console](https://console.groq.com/)
 - Get Pexels API key → [Pexels API](https://www.pexels.com/api/)
 
 ### 5. Run the app
@@ -98,16 +98,15 @@ streamlit run app.py
 
 ---
 
-## 🤖 LLM Used — Google Gemini
+## 🤖 LLM Used — Groq API
 
-**Why GROQ?**
-- Free tier is generous — no billing required for this project
-- Have been personally using this for quite a while, really love the accurate response
-- Native JSON mode makes structured slide output reliable
-- Fast response times suitable for real-time generation
+**Why Groq?**
+- Extremely fast inference — significantly faster than most LLM providers
+- Free tier available — no billing required for this project
+- Compatible with LLaMA models giving high quality structured JSON output
 
 **Prompt Design:**
-The research prompt instructs Gemini to return a strict JSON structure with `topic`, and a `slides` array — each slide containing `title`, `bullets` (3–5 points), `notes`, and `image_query`. Pydantic validation ensures no malformed output reaches the Slides API.
+The research prompt instructs the LLM to return a strict JSON structure with `topic` and a `slides` array — each slide containing `title`, `bullets` (3–5 points), `notes`, and `image_query`. Pydantic validation ensures no malformed output reaches the Slides API.
 
 ---
 
@@ -128,7 +127,7 @@ Tested with 3+ topics of varying complexity:
 streamlit
 google-api-python-client
 google-auth
-google-generativeai
+groq
 pydantic
 requests
 python-dotenv
@@ -145,7 +144,7 @@ pip install -r requirements.txt
 
 | Variable | Description |
 |---|---|
-| `GROQ_API_KEY` | GROQ API key |
+| `GROQ_API_KEY` | Groq API key |
 | `PEXELS_API_KEY` | Pexels image search API key |
 
 Never commit `.env` or `credentials.json` to GitHub.
