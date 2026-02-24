@@ -100,8 +100,9 @@ streamlit run app.py
 
 ## 🤖 LLM Used — Google Gemini
 
-**Why Gemini?**
+**Why GROQ?**
 - Free tier is generous — no billing required for this project
+- Have been personally using this for quite a while, really love the accurate response
 - Native JSON mode makes structured slide output reliable
 - Fast response times suitable for real-time generation
 
@@ -144,7 +145,7 @@ pip install -r requirements.txt
 
 | Variable | Description |
 |---|---|
-| `GEMINI_API_KEY` | Google Gemini API key |
+| `GROQ_API_KEY` | GROQ API key |
 | `PEXELS_API_KEY` | Pexels image search API key |
 
 Never commit `.env` or `credentials.json` to GitHub.
