@@ -4,13 +4,12 @@ from groq import Groq
 from dotenv import load_dotenv
 from models import SlideContent, PresentationOutline
 
-# Load .env file
 load_dotenv()
 
-# Initialize Groq client
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-def build_outline(topic: str) -> PresentationOutline:
+
+def build_outline(topic: str, num_slides: int = 8) -> PresentationOutline:
     prompt = f"""
 Research the topic '{topic}' deeply and return a comprehensive, detailed JSON object with this exact structure:
 
@@ -46,11 +45,11 @@ Research the topic '{topic}' deeply and return a comprehensive, detailed JSON ob
 }}
 
 **STRICT RULES:**
-- Generate 7-9 slides total (including 1-2 table slides)
+- Generate EXACTLY {num_slides} slides (no more, no less)
+- Include 1-2 table slides within those {num_slides} slides
 - Each bullet must be 15-25 words long — comprehensive and detailed
 - Include specific examples, statistics, facts, or real-world applications
 - Speaker notes must be 2-3 full sentences with extra context
-- Add a table on 1-2 slides where comparison/analysis makes sense
 - Table slides should have empty bullets array and no image_query
 - Non-table slides must have 4-5 detailed bullets
 - Return ONLY valid JSON, no markdown, no explanations
@@ -92,7 +91,7 @@ Research the topic '{topic}' deeply and return a comprehensive, detailed JSON ob
 
 
 if __name__ == "__main__":
-    outline = build_outline("Artificial Intelligence")
+    outline = build_outline("Artificial Intelligence", num_slides=8)
     print(f"\nTopic: {outline.topic}")
     for i, slide in enumerate(outline.slides, start=1):
         print(f"\nSlide {i}: {slide.title}")
