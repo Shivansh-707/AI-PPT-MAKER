@@ -47,6 +47,7 @@ The system follows a **two-phase AI pipeline**:
 - ⏱️ **Time Logging** — Displays research time + generation time separately
 - 🔗 **Shareable Link** — Returns a public Google Slides link instantly
 - 🧹 **No Overlap** — Text and images are precisely split left/right per slide
+- ✌🏻 **Number Of Slides** - User can select the number of slides he wants 
 
 ---
 
