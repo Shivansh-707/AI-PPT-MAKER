@@ -163,11 +163,11 @@ st.markdown("""
     <h1>📊 AI PPT Maker</h1>
     <p>Enter any topic — AI researches it and builds a complete Google Slides presentation for you.</p>
     <div style="margin-top: 1rem;">
-        <span class="feature-pill">🤖 Gemini AI</span>
+        <span class="feature-pill">⚡ Groq API</span>
         <span class="feature-pill">🖼️ Auto Images</span>
         <span class="feature-pill">🎨 4 Themes</span>
         <span class="feature-pill">📝 Speaker Notes</span>
-        <span class="feature-pill">⚡ ~30s</span>
+        <span class="feature-pill">🚀 ~30s</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -208,7 +208,7 @@ with st.sidebar:
         st.markdown(f"[{label}]({link})")
 
     st.markdown("---")
-    st.caption("Built with Gemini · Google Slides API · Pexels")
+    st.caption("Built with Groq · Google Slides API · Pexels")  # ← fixed
 
 # ── Main Input ────────────────────────────────────────────────────────────────
 col1, col2, col3 = st.columns([1, 2, 1])
@@ -231,7 +231,7 @@ if generate_btn:
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             # Phase 1
-            with st.status("🔍 Phase 1: Researching topic with Gemini...", expanded=True) as status:
+            with st.status("🔍 Phase 1: Researching topic with Groq...", expanded=True) as status:  # ← fixed
                 research_start = time.time()
                 try:
                     outline = build_outline(topic.strip())
